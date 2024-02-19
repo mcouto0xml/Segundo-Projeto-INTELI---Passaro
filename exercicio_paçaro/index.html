@@ -1,0 +1,134 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.min.js"></script>
+    <title>Exercício do Pássaro</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;  }
+    </style>
+</head>
+<body>
+
+<script>
+
+// configurando o Phaser
+
+var config = {
+        type: Phaser.AUTO,
+        width: 800,
+        height: 600,
+
+// aqui estou apenas comunicando o phaser como quero organizar meu jogo
+
+        scene: {
+            preload: preload,
+            create: create,
+            update: update
+        }
+    };
+
+    var game = new Phaser.Game(config);
+
+// aqui estamos carregando os elementos que queremos adicionar ao jogo
+
+    function preload() {
+        this.load.image('bg', 'assets/bg_space.png');
+        this.load.spritesheet('bird', 'assets/bird-red.png', { frameWidth: 75, frameHeight: 75 });
+        this.load.spritesheet('bird_2', 'assets/bird-purple.png', {frameWidth: 75, frameHeight: 75});
+    }
+
+// depois que carregamos os recursos, aqui configuramos os elementos da cena
+
+    function create() {
+        
+        this.add.image(400, 300, 'bg').setScale(1.2);
+        
+        passaro = this.add.sprite(100, 600, 'bird').setScale(1.3);
+
+        passaro_2 = this.add.sprite(100, 100, 'bird_2').setScale(1.3);
+
+        this.anims.create({
+            key: 'fly',
+            frames: this.anims.generateFrameNumbers('bird', { start: 0, end: 7}),
+            frameRate: 10,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'purple_fly',
+            frames: this.anims.generateFrameNumbers('bird_2', { start: 0, end: 7}),
+            frameRate: 10,
+            repeat: -1
+        })
+
+        passaro.anims.play('fly', true);
+
+    }
+
+// essa função é chamada repetidamente no jogo, ela é a que adiciona mecânica ao jogo
+
+    function update() { 
+
+// 1 aqui estamos delimitando onde o passaro vai considerar como ida, e quando isso acontecer ele estára na virado para o lado certo
+    if (passaro.x === 100) {
+        passaro.setFlip(false, false);
+        passaro.ida = true;
+    }
+
+// 2 aqui estamos considerando que o passaro esta indo até a posição 700x e adicionando movimento a ele
+    if (passaro.x < 700 && passaro.ida === true) {
+        console.log(" o que acontece?");
+        passaro.x += 5;
+    }
+
+// 3 delimitando a volta do passaro e colocando ele do lado certo, virado para a volta, (mesma logica do bloco 1)
+    if (passaro.x === 700) {
+        passaro.setFlip(true, false);
+        passaro.ida = false;
+    }
+
+// agora delimitado a volta, estamos adicionando movimento a volta
+    if (passaro.x > 100 && passaro.ida === false) {
+        console.log("e o que acontece agora?");
+        passaro.x -= 5;
+    }
+
+// aqui estamos delimitando onde começará a descida dele
+    if (passaro.y === 100) {
+        passaro.descida = true;
+    }
+
+// agora delimitado a descida, iremos adicionar um movimento de descida do passaro
+    if (passaro.y < 600 && passaro.descida === true) {
+        passaro.y += 5;
+    }
+
+// já delimitada a descida, iremos delimitar a subida
+    if (passaro.y === 600) {
+        passaro.descida = false;
+    }
+
+// agora delimitado a subida, iremos adicionar um movimento de subida ao passaro
+    if (passaro.y > 100 && passaro.descida === false) {
+        passaro.y -= 5;
+    }
+
+    
+
+}
+
+
+
+</script>
+
+</body>
+</html>
